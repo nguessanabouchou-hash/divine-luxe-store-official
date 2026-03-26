@@ -1116,9 +1116,15 @@ const supabaseUrl = 'https://inpvadoljetsawrahgdq.supabase.co';
         toastLogin.classList.add("opacity-0");
       }, 2500);
     }
-    document.getElementById("mock-login").addEventListener("click", showToast);
-    document.getElementById("btn-login").addEventListener("click", showToast);
-
+    async function handleLogin() {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email:prompt("Entrez votre propre email:")'
+        options: {emailRedirectTo:window.location.origin }
+    });
+    if (error) alert("Erreur : " + error.message);
+    else alert("Lien envoyé !");
+    }
+    document.getElementByld("btn-login").addEventListener("click",handleLogin);
     // Initial render
     renderProducts();
     applyLanguage("fr");
