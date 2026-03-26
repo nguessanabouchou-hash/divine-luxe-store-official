@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Divine Luxe Store - Boutique de Charlène</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --color-bg: #050816;
+      --color-bg-alt: #0b1120;
+      --color-primary: #f97316;
+      --color-primary-soft: rgba(249,115,22,0.12);
+      --color-accent: #22c55e;
+      --color-text: #e5e7eb;
+      --color-muted: #9ca3af;
+      --radius-xl: 1.5rem;
+      --shadow-soft: 0 18px 45px rgba(15,23,42,0.75);
+      --transition-fast: 200ms ease-out;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--color-text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    /* Smooth cards */
+    .glass-card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(15,23,42,0.85));
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.18);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      color: #020617;
+      border-radius: 9999px;
+      padding: 0.6rem 1.6rem;
+      font-weight: 600;
+      box-shadow: 0 12px 30px rgba(248,113,22,0.5);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(248,113,22,0.6);
+      opacity: 0.95;
+    }
+    .btn-outline {
+      border-radius: 9999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      padding: 0.55rem 1.4rem;
+      font-weight: 500;
+      color: var(--color-text);
+      background: rgba(15,23,42,0.6);
+      transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    }
+    .btn-outline:hover {
+      background: rgba(30,64,175,0.7);
+      border-color: rgba(59,130,246,0.8);
+      transform: translateY(-1px);
+    }
+
+    .badge {
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.6rem;
+      background: rgba(15,118,110,0.18);
+      border: 1px solid rgba(34,211,238,0.5);
+      color: #a5f3fc;
+    }
+
+    .nav-glass {
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 45%), rgba(15,23,42,0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(148,163,184,0.25);
+    }
+
+    /* Product card */
+    .product-card {
+      border-radius: 1.25rem;
+      background: radial-gradient(circle at top left, rgba(248,113,22,0.15), transparent 45%), rgba(15,23,42,0.96);
+      border: 1px solid rgba(148,163,184,0.22);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      position: relative;
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 28px 80px rgba(15,23,42,0.95);
+      border-color: rgba(248,113,22,0.6);
+    }
+    .product-img-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+    .product-img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      transition: transform 260ms ease-out;
+    }
+    .product-card:hover .product-img {
+      transform: scale(1.05);
+    }
+
+    /* Floating whatsapp over product */
+    .whatsapp-fab {
+      position: absolute;
+      bottom: 0.75rem;
+      right: 0.75rem;
+      background: #22c55e;
+      color: #ecfdf5;
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 14px 30px rgba(22,163,74,0.8);
+      transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+      z-index: 10;
+    }
+    .whatsapp-fab:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 18px 40px rgba(22,163,74,0.95);
+    }
+
+    /* Section titles */
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Admin / modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal-panel {
+      max-width: 480px;
+      width: 92%;
+    }
+
+    .input {
+      width: 100%;
+      border-radius: 9999px;
+      padding: 0.55rem 0.95rem;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.38);
+      color: var(--color-text);
+      font-size: 0.9rem;
+    }
+    .input:focus {
+      outline: none;
+      border-color: rgba(248,113,22,0.9);
+      box-shadow: 0 0 0 1px rgba(248,113,22,0.6);
+    }
+
+    .textarea {
+      width: 100%;
+      border-radius: 1rem;
+      padding: 0.7rem 0.9rem;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.38);
+      color: var(--color-text);
+      font-size: 0.9rem;
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    /* Language pill */
+    .lang-pill-active {
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      box-shadow: 0 0 0 1px rgba(248,113,22,0.7), 0 0 25px rgba(248,113,22,0.35);
+    }
+    .lang-pill {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Simple fade-in animation */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeInUp 480ms ease-out forwards;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 640px) {
+      .hero-grid {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+      .hero-img {
+        max-height: 260px;
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-100">
+  <!-- Top gradient blob -->
+  <div class="fixed inset-x-0 -top-40 -z-10 flex justify-center opacity-60">
+    <div class="h-72 w-72 rounded-full bg-gradient-to-br from-orange-500 via-pink-500 to-sky-500 blur-3xl opacity-60"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="nav-glass fixed inset-x-0 top-0 z-40">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 ring-2 ring-orange-400/80">
+          <span class="text-lg font-bold tracking-tight">DL</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.18em] text-orange-400">Divine Luxe Store</p>
+          <p class="text-xs text-slate-400" data-i18n="nav_tagline">Mode, luxe & fitness pour une élégance quotidienne.</p>
+        </div>
+      </div>
+
+      <div class="hidden items-center gap-6 md:flex">
+        <a href="#collections" class="text-xs font-medium uppercase tracking-[0.18em] text-slate-300 hover:text-white" data-i18n="nav_collections">Collections</a>
+        <a href="#about" class="text-xs font-medium uppercase tracking-[0.18em] text-slate-300 hover:text-white" data-i18n="nav_about">À propos</a>
+        <a href="#reviews" class="text-xs font-medium uppercase tracking-[0.18em] text-slate-300 hover:text-white" data-i18n="nav_reviews">Avis clients</a>
+        <a href="#contact" class="text-xs font-medium uppercase tracking-[0.18em] text-slate-300 hover:text-white" data-i18n="nav_contact">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Language switch -->
+        <div class="glass-card flex items-center gap-1 rounded-full border px-1.5 py-1">
+          <button id="lang-fr" class="lang-pill rounded-full px-2 py-0.5 text-xs font-semibold tracking-wide text-slate-300 hover:text-white">FR</button>
+          <button id="lang-en" class="lang-pill rounded-full px-2 py-0.5 text-xs font-semibold tracking-wide text-slate-300 hover:text-white">EN</button>
+        </div>
+
+        <!-- Auth buttons -->
+        <button id="btn-login" class="hidden text-xs font-semibold uppercase tracking-[0.18em] text-slate-300 hover:text-white sm:block" data-i18n="nav_login">Connexion</button>
+
+        <button id="btn-cart" class="relative flex h-9 w-9 items-center justify-center rounded-full bg-slate-900/80 text-slate-100 ring-1 ring-slate-600/70 hover:ring-orange-400/80">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M6 6h15l-1.5 9h-12L6 6Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="19" r="1" stroke-width="1.5"/>
+            <circle cx="18" cy="19" r="1" stroke-width="1.5"/>
+          </svg>
+          <span id="cart-count" class="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-[0.6rem] font-semibold text-slate-900">0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="mx-auto mt-[78px] max-w-6xl px-4 pb-24 pt-8 sm:px-6 sm:pt-16">
+    <!-- HERO -->
+    <section class="hero-grid grid gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:items-center">
+      <div class="space-y-6">
+        <div class="inline-flex items-center gap-2 rounded-full border border-orange-400/50 bg-orange-500/10 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-orange-200">
+          <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_#22c55e]"></span>
+          <span data-i18n="hero_pill">Cadeau d'anniversaire pour Charlène · Edition spéciale</span>
+        </div>
+
+        <div class="space-y-3">
+          <h1 class="text-balance text-3xl font-semibold leading-tight tracking-tight text-slate-50 sm:text-4xl lg:text-5xl">
+            <span data-i18n="hero_title_1">Divine Luxe Store</span><br/>
+            <span class="bg-gradient-to-r from-orange-400 via-amber-300 to-rose-400 bg-clip-text text-transparent" data-i18n="hero_title_2">élégance, luxe & énergie fitness</span>
+          </h1>
+          <p class="max-w-xl text-sm leading-relaxed text-slate-300 sm:text-[0.95rem]" data-i18n="hero_subtitle">
+            Une boutique pensée pour Charlène, basée en Australie, qui rassemble sacs de luxe, talons raffinés et tenues de fitness modernes pour sublimer chaque moment de la journée.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="btn-primary" onclick="document.getElementById('collections').scrollIntoView({behavior:'smooth'})" data-i18n="hero_cta_primary">
+            Découvrir les collections
+          </button>
+          <button class="btn-outline flex items-center gap-2" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+            <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-[0.7rem] text-orange-400 ring-1 ring-orange-500/60">CH</span>
+            <span class="text-xs" data-i18n="hero_cta_secondary">À propos de Charlène</span>
+          </button>
+        </div>
+
+        <div class="mt-2 grid max-w-xl grid-cols-2 gap-4 text-xs text-slate-300 sm:grid-cols-4">
+          <div>
+            <p class="font-semibold text-orange-300">+120</p>
+            <p data-i18n="stat_clients">clients satisfaits</p>
+          </div>
+          <div>
+            <p class="font-semibold text-orange-300">+40</p>
+            <p data-i18n="stat_products">modèles en ligne</p>
+          </div>
+          <div>
+            <p class="font-semibold text-orange-300">PayPal</p>
+            <p data-i18n="stat_paypal">paiement sécurisé</p>
+          </div>
+          <div>
+            <p class="font-semibold text-orange-300">Worldwide</p>
+            <p data-i18n="stat_worldwide">clients internationaux</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative fade-in-up">
+        <div class="glass-card hero-img relative mx-auto h-full max-h-[380px] w-full overflow-hidden rounded-[2rem] border border-orange-400/40 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-4 sm:p-5">
+          <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(248,113,22,0.35),transparent_60%)]"></div>
+
+          <div class="relative h-full w-full overflow-hidden rounded-2xl bg-slate-900/80">
+            <img src="https://images.pexels.com/photos/7671166/pexels-photo-7671166.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Sacs de luxe et chaussures élégantes" class="h-full w-full object-cover opacity-95"/>
+          </div>
+
+          <div class="pointer-events-none absolute inset-x-5 bottom-4 flex justify-between text-[0.7rem] font-medium text-slate-100 sm:text-xs">
+            <div class="glass-card flex items-center gap-2 rounded-2xl border border-slate-700/70 bg-slate-900/80 px-3 py-2">
+              <div class="h-7 w-7 rounded-xl bg-gradient-to-tr from-orange-500 to-rose-500 ring-2 ring-orange-300/70"></div>
+              <div>
+                <p class="text-[0.7rem] uppercase tracking-[0.18em] text-slate-400" data-i18n="hero_card_owner_label">Fondatrice</p>
+                <p class="text-xs font-semibold text-orange-100">Charlène · Divine Luxe Store</p>
+              </div>
+            </div>
+            <div class="glass-card flex flex-col items-end rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-2">
+              <p class="text-[0.7rem] uppercase tracking-[0.18em] text-emerald-200" data-i18n="hero_card_note_label">Note clients</p>
+              <p class="text-xs font-semibold"><span class="text-emerald-300">4.9</span> / 5</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUTH & ADMIN PANEL -->
+    <section id="auth-admin" class="mt-16 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="section-title" data-i18n="section_auth_admin">Espace client & administrateur</h2>
+        <span class="badge" data-i18n="section_auth_badge">Démo sécurisée · Admin : vous & Charlène</span>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <!-- Client / Login -->
+        <div class="glass-card p-5 sm:p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold uppercase tracking-[0.18em]" data-i18n="client_space_title">Espace client</h3>
+              <p class="mt-1 text-xs text-slate-400" data-i18n="client_space_subtitle">Créez un compte pour suivre vos commandes et vos favoris.</p>
+            </div>
+            <span class="rounded-full bg-emerald-500/15 px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-emerald-300" data-i18n="client_space_status">Ouvert</span>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="space-y-3">
+              <label class="block text-xs font-semibold uppercase tracking-[0.18em] text-slate-400" data-i18n="login_email_label">E-mail</label>
+              <input type="email" class="input" placeholder="vous@example.com"/>
+            </div>
+            <div class="space-y-3">
+              <label class="block text-xs font-semibold uppercase tracking-[0.18em] text-slate-400" data-i18n="login_password_label">Mot de passe</label>
+              <input type="password" class="input" placeholder="••••••••"/>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-xs text-slate-400">
+              <input id="remember" type="checkbox" class="h-3.5 w-3.5 rounded border-slate-500 bg-slate-900/90 text-orange-500 focus:ring-orange-500"/>
+              <label for="remember" class="cursor-pointer" data-i18n="login_remember">Se souvenir de moi</label>
+            </div>
+            <button class="btn-primary text-xs" id="mock-login" data-i18n="login_btn">Se connecter</button>
+          </div>
+
+          <p class="mt-3 text-[0.7rem] text-slate-400" data-i18n="login_hint">
+            Démo : la connexion est simulée pour montrer l'interface (aucune donnée réelle n'est stockée).
+          </p>
+        </div>
+
+        <!-- Admin Info -->
+        <div class="glass-card flex flex-col justify-between p-5 sm:p-6">
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-[0.18em]" data-i18n="admin_title">Accès administrateur</h3>
+            <p class="mt-2 text-xs text-slate-300" data-i18n="admin_description">
+              Vous et Charlène êtes administratrices : vous pouvez modifier les prix, ajouter de nouvelles photos et créer de nouveaux produits depuis un tableau de bord privé.
+            </p>
+            <ul class="mt-3 space-y-1.5 text-xs text-slate-300">
+              <li>• <span data-i18n="admin_feature_1">Modifier les prix en temps réel</span></li>
+              <li>• <span data-i18n="admin_feature_2">Ajouter / retirer des produits</span></li>
+              <li>• <span data-i18n="admin_feature_3">Gérer les langues et descriptions</span></li>
+            </ul>
+          </div>
+          <button id="btn-open-admin" class="mt-4 w-full rounded-xl border border-orange-400/60 bg-orange-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-orange-200 hover:bg-orange-500/20" data-i18n="admin_cta">
+            Ouvrir le panneau admin (démo)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLLECTIONS -->
+    <section id="collections" class="mt-16 space-y-6">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 class="section-title" data-i18n="section_collections">Collections Divine Luxe Store</h2>
+          <p class="mt-2 max-w-xl text-sm text-slate-300" data-i18n="section_collections_subtitle">
+            Sacs de luxe, talons élégants et tenues fitness sélectionnés avec soin par Charlène pour vous accompagner du matin au soir.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+          <button class="rounded-full bg-slate-900/80 px-3 py-1 font-medium text-orange-300 ring-1 ring-orange-400/70" data-i18n="filter_all">Tous</button>
+          <button class="rounded-full bg-slate-900/60 px-3 py-1" data-i18n="filter_bags">Sacs de luxe</button>
+          <button class="rounded-full bg-slate-900/60 px-3 py-1" data-i18n="filter_heels">Talons</button>
+          <button class="rounded-full bg-slate-900/60 px-3 py-1" data-i18n="filter_fitness">Fitness</button>
+        </div>
+      </div>
+
+      <!-- Products grid -->
+      <div id="product-grid" class="grid gap-6 pt-2 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Template populated by JS -->
+      </div>
+    </section>
+
+    <!-- PAYPAL & PAYMENT SECTION -->
+    <section class="mt-16 grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+      <div class="glass-card p-5 sm:p-6">
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="section-title text-base" data-i18n="section_payment">Paiement sécurisé PayPal</h2>
+          <div class="rounded-full bg-sky-500/15 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sky-300">PayPal</div>
+        </div>
+        <p class="mt-2 text-sm text-slate-300" data-i18n="payment_text">
+          Divine Luxe Store accepte les paiements via PayPal pour protéger vos achats. Vous pouvez payer avec votre solde PayPal ou votre carte bancaire, sans partager directement vos informations de carte avec la boutique.
+        </p>
+        <ul class="mt-3 space-y-1.5 text-xs text-slate-300">
+          <li>• <span data-i18n="payment_feature_1">Protection des achats & remboursement en cas de problème</span></li>
+          <li>• <span data-i18n="payment_feature_2">Validation rapide et suivi en temps réel</span></li>
+          <li>• <span data-i18n="payment_feature_3">Adapté aux clients du monde entier</span></li>
+        </ul>
+        <button class="mt-4 btn-primary text-xs" data-i18n="payment_cta">Payer avec PayPal (démo)</button>
+      </div>
+
+      <div class="glass-card p-5 sm:p-6">
+        <h3 class="text-sm font-semibold uppercase tracking-[0.18em]" data-i18n="section_language_title">Boutique multilingue</h3>
+        <p class="mt-2 text-sm text-slate-300" data-i18n="section_language_text">
+          Le site peut être affiché en français ou en anglais, et peut évoluer pour accueillir d'autres langues afin que les clients du monde entier puissent profiter de Divine Luxe Store dans leur langue.
+        </p>
+        <div class="mt-4 flex items-center gap-3">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-lg">🌍</span>
+          <div class="text-xs text-slate-300">
+            <p data-i18n="section_language_hint_1">Cliquez sur FR / EN en haut pour changer la langue de l'interface.</p>
+            <p data-i18n="section_language_hint_2">Les descriptions produits peuvent aussi être traduites.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT CHARLÈNE -->
+    <section id="about" class="mt-16 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="section-title" data-i18n="section_about">À propos de Charlène</h2>
+        <span class="badge" data-i18n="section_about_badge">Basée en Australie</span>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.9fr)]">
+        <div class="glass-card p-5 sm:p-6">
+          <p class="text-sm leading-relaxed text-slate-200" data-i18n="about_text_1">
+            Charlène est une femme passionnée de mode, de luxe et de bien-être. Installée en Australie, elle a créé Divine Luxe Store pour partager son sens du détail, des belles matières et des pièces qui donnent confiance.
+          </p>
+          <p class="mt-3 text-sm leading-relaxed text-slate-200" data-i18n="about_text_2">
+            Elle sélectionne elle-même chaque sac, chaque paire de talons et chaque tenue fitness avec un objectif : permettre à chaque cliente de se sentir élégante, forte et unique, que ce soit pour une soirée chic ou une séance de sport.
+          </p>
+          <p class="mt-3 text-sm leading-relaxed text-slate-200" data-i18n="about_text_3">
+            Divine Luxe Store est aussi un projet de cœur entre vous et elle : un cadeau d'anniversaire digital et une boutique moderne qui peut évoluer avec vos envies et vos rêves.
+          </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-300">
+            <span class="rounded-full bg-slate-900/80 px-3 py-1 font-medium" data-i18n="about_tag_1">Sacs de luxe</span>
+            <span class="rounded-full bg-slate-900/80 px-3 py-1 font-medium" data-i18n="about_tag_2">Talons élégants</span>
+            <span class="rounded-full bg-slate-900/80 px-3 py-1 font-medium" data-i18n="about_tag_3">Tenues fitness</span>
+          </div>
+        </div>
+
+        <div class="glass-card flex flex-col justify-between p-5 sm:p-6">
+          <div class="flex items-center gap-3">
+            <div class="h-14 w-14 overflow-hidden rounded-2xl border border-orange-400/60 bg-gradient-to-tr from-orange-500 to-rose-500">
+              <img src="https://images.pexels.com/photos/3760852/pexels-photo-3760852.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Portrait stylisé de Charlène" class="h-full w-full object-cover"/>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-orange-200" data-i18n="about_owner_label">Fondatrice & Propriétaire</p>
+              <p class="text-sm font-semibold text-slate-100">Charlène · Divine Luxe Store</p>
+              <p class="text-xs text-slate-400">Sydney, Australie</p>
+            </div>
+          </div>
+
+          <div class="mt-4 space-y-2 text-xs text-slate-300">
+            <p data-i18n="about_quote_1">“La vraie élégance, c'est se sentir bien dans ce que l'on porte, en toute occasion.”</p>
+            <p data-i18n="about_quote_2">“Chaque produit de Divine Luxe Store est choisi comme si c'était un cadeau pour une personne chère.”</p>
+          </div>
+
+          <div class="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M4 13.5 9.5 19 20 5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span data-i18n="about_point_1">Sélection soignée & service chaleureux</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-sky-500/15 text-sky-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M3 5h18M3 12h18M3 19h18" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span data-i18n="about_point_2">Boutique gérée à deux : vous & elle</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section id="reviews" class="mt-16 space-y-6">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <h2 class="section-title" data-i18n="section_reviews">Avis clients</h2>
+        <span class="badge" data-i18n="section_reviews_badge">Commentaires positifs</span>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="glass-card p-5 text-sm">
+          <div class="flex items-center justify-between">
+            <p class="font-semibold">Amina</p>
+            <div class="flex items-center gap-1 text-xs text-amber-300">
+              <span>★★★★★</span>
+            </div>
+          </div>
+          <p class="mt-2 text-xs text-slate-300" data-i18n="review_1">
+            “Les sacs de Divine Luxe Store sont magnifiques. La qualité est incroyable et Charlène répond toujours avec beaucoup de gentillesse. Je me sens vraiment spéciale avec chaque pièce.”
+          </p>
+          <p class="mt-2 text-[0.7rem] text-slate-500">Paris · Sacs de luxe</p>
+        </article>
+
+        <article class="glass-card p-5 text-sm">
+          <div class="flex items-center justify-between">
+            <p class="font-semibold">Sophia</p>
+            <div class="flex items-center gap-1 text-xs text-amber-300">
+              <span>★★★★★</span>
+            </div>
+          </div>
+          <p class="mt-2 text-xs text-slate-300" data-i18n="review_2">
+            “Les talons sont sublimes et très confortables. J'ai reçu beaucoup de compliments en soirée. Le service client est attentionné, on sent que la boutique est gérée avec le cœur.”
+          </p>
+          <p class="mt-2 text-[0.7rem] text-slate-500">Sydney · Talons</p>
+        </article>
+
+        <article class="glass-card p-5 text-sm">
+          <div class="flex items-center justify-between">
+            <p class="font-semibold">Emily</p>
+            <div class="flex items-center gap-1 text-xs text-amber-300">
+              <span>★★★★★</span>
+            </div>
+          </div>
+          <p class="mt-2 text-xs text-slate-300" data-i18n="review_3">
+            “Les tenues fitness sont parfaites : belles, confortables et de très bonne qualité. J'adore m'entraîner avec, on se sent motivée et élégante en même temps.”
+          </p>
+          <p class="mt-2 text-[0.7rem] text-slate-500">Londres · Fitness</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="mt-16 grid gap-6 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.9fr)]">
+      <div class="glass-card p-5 sm:p-6">
+        <h2 class="section-title" data-i18n="section_contact">Contact & Support</h2>
+        <p class="mt-2 text-sm text-slate-300" data-i18n="contact_text">
+          Pour toute question sur une commande, un produit ou une collaboration, vous pouvez contacter directement Charlène ou vous connecter à votre compte client.
+        </p>
+
+        <div class="mt-4 grid gap-3 text-xs text-slate-300 sm:grid-cols-2">
+          <div class="space-y-1.5">
+            <p class="font-semibold" data-i18n="contact_email_label">E-mail de la boutique</p>
+            <a href="mailto:c_jabbie@yahoo.com.au" class="inline-flex items-center gap-1 text-orange-200 hover:text-orange-100">
+              <span>c_jabbie@yahoo.com.au</span>
+            </a>
+          </div>
+          <div class="space-y-1.5">
+            <p class="font-semibold" data-i18n="contact_whatsapp_label">WhatsApp boutique</p>
+            <a href="https://wa.me/61413977015" target="_blank" class="inline-flex items-center gap-1 text-emerald-300 hover:text-emerald-200">
+              <span>+61 413 977 015</span>
+            </a>
+          </div>
+        </div>
+
+        <form class="mt-5 space-y-3 text-xs">
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label class="mb-1 block font-semibold uppercase tracking-[0.18em] text-slate-400" data-i18n="contact_form_name">Nom complet</label>
+              <input type="text" class="input" placeholder="Votre nom"/>
+            </div>
+            <div>
+              <label class="mb-1 block font-semibold uppercase tracking-[0.18em] text-slate-400" data-i18n="contact_form_email">E-mail</label>
+              <input type="email" class="input" placeholder="vous@example.com"/>
+            </div>
+          </div>
+          <div>
+            <label class="mb-1 block font-semibold uppercase tracking-[0.18em] text-slate-400" data-i18n="contact_form_message">Message</label>
+            <textarea class="textarea" placeholder="Votre message..."></textarea>
+          </div>
+          <button type="button" class="btn-primary text-xs" data-i18n="contact_form_btn">Envoyer (démo)</button>
+        </form>
+      </div>
+
+      <div class="glass-card flex flex-col justify-between p-5 sm:p-6">
+        <div>
+          <h3 class="text-sm font-semibold uppercase tracking-[0.18em]" data-i18n="contact_support_title">Support personnalisé</h3>
+          <p class="mt-2 text-xs text-slate-300" data-i18n="contact_support_text">
+            Charlène prend le temps de répondre à chaque message avec bienveillance. Que vous ayez besoin d'un conseil taille, d'une idée de look ou d'un suivi de colis, vous serez accompagnée.
+          </p>
+        </div>
+        <div class="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-300">
+          <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-3 py-1 text-emerald-200">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
+            <span data-i18n="contact_support_point_1">Réponse rapide sur WhatsApp</span>
+          </span>
+          <span class="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-3 py-1 text-sky-200">
+            <span class="h-1.5 w-1.5 rounded-full bg-sky-300"></span>
+            <span data-i18n="contact_support_point_2">Suivi client humain & chaleureux</span>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ADMIN MODAL -->
+  <div id="admin-modal" class="hidden modal-backdrop">
+    <div class="modal-panel glass-card p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-orange-200" data-i18n="admin_modal_title">Panneau admin (démo)</p>
+          <p class="mt-1 text-xs text-slate-400" data-i18n="admin_modal_subtitle">
+            Vous et Charlène pouvez modifier les prix et ajouter des images. Cette interface est une démonstration.
+          </p>
+        </div>
+        <button id="btn-close-admin" class="rounded-full bg-slate-900/80 p-1 text-slate-300 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M6 6 18 18M6 18 18 6" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-3 text-xs">
+        <div>
+          <label class="mb-1 block font-semibold uppercase tracking-[0.18em] text-slate-400" data-i18n="admin_modal_select_product">Sélectionner un produit</label>
+          <select id="admin-product-select" class="input">
+          </select>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label class="mb-1 block font-semibold uppercase tracking-[0.18em] text-slate-400" data-i18n="admin_modal_price">Nouveau prix (AU$)</label>
+            <input id="admin-new-price" type="number" min="0" step="0.01" class="input" placeholder="120.00"/>
+          </div>
+          <div>
+            <label class="mb-1 block font-semibold uppercase tracking-[0.18em] text-slate-400" data-i18n="admin_modal_image">Nouvelle image (URL)</label>
+            <input id="admin-new-image" type="text" class="input" placeholder="https://..."/>
+          </div>
+        </div>
+
+        <button id="admin-apply" class="btn-primary mt-2 w-full text-xs" data-i18n="admin_modal_apply">Appliquer les changements (démo)</button>
+
+        <p class="mt-1 text-[0.7rem] text-slate-400" data-i18n="admin_modal_note">
+          Dans une version finale, cette section serait protégée par un vrai système d'authentification (par exemple via e-mail et mot de passe pour vous et Charlène).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN TOAST -->
+  <div id="toast-login" class="pointer-events-none fixed inset-x-0 top-20 z-50 flex justify-center opacity-0 transition-opacity duration-300">
+    <div class="glass-card flex items-center gap-3 rounded-2xl border border-emerald-400/60 bg-emerald-500/10 px-4 py-2 text-xs text-emerald-100 shadow-lg">
+      <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M4 13.5 9.5 19 20 5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span data-i18n="toast_login">Connexion simulée : interface client débloquée pour la démo.</span>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // --- Multilingual content (FR / EN) ---
+    const i18n = {
+      fr: {
+        nav_tagline: "Mode, luxe & fitness pour une élégance quotidienne.",
+        nav_collections: "Collections",
+        nav_about: "À propos",
+        nav_reviews: "Avis clients",
+        nav_contact: "Contact",
+        nav_login: "Connexion",
+        hero_pill: "Cadeau d'anniversaire pour Charlène · Edition spéciale",
+        hero_title_1: "Divine Luxe Store",
+        hero_title_2: "élégance, luxe & énergie fitness",
+        hero_subtitle: "Une boutique pensée pour Charlène, basée en Australie, qui rassemble sacs de luxe, talons raffinés et tenues de fitness modernes pour sublimer chaque moment de la journée.",
+        hero_cta_primary: "Découvrir les collections",
+        hero_cta_secondary: "À propos de Charlène",
+        stat_clients: "clients satisfaits",
+        stat_products: "modèles en ligne",
+        stat_paypal: "paiement sécurisé",
+        stat_worldwide: "clients internationaux",
+        hero_card_owner_label: "Fondatrice",
+        hero_card_note_label: "Note clients",
+
+        section_auth_admin: "Espace client & administrateur",
+        section_auth_badge: "Démo sécurisée · Admin : vous & Charlène",
+        client_space_title: "Espace client",
+        client_space_subtitle: "Créez un compte pour suivre vos commandes et vos favoris.",
+        client_space_status: "Ouvert",
+        login_email_label: "E-mail",
+        login_password_label: "Mot de passe",
+        login_remember: "Se souvenir de moi",
+        login_btn: "Se connecter",
+        login_hint: "Démo : la connexion est simulée pour montrer l'interface (aucune donnée réelle n'est stockée).",
+        admin_title: "Accès administrateur",
+        admin_description: "Vous et Charlène êtes administratrices : vous pouvez modifier les prix, ajouter de nouvelles photos et créer de nouveaux produits depuis un tableau de bord privé.",
+        admin_feature_1: "Modifier les prix en temps réel",
+        admin_feature_2: "Ajouter / retirer des produits",
+        admin_feature_3: "Gérer les langues et descriptions",
+        admin_cta: "Ouvrir le panneau admin (démo)",
+
+        section_collections: "Collections Divine Luxe Store",
+        section_collections_subtitle: "Sacs de luxe, talons élégants et tenues fitness sélectionnés avec soin par Charlène pour vous accompagner du matin au soir.",
+        filter_all: "Tous",
+        filter_bags: "Sacs de luxe",
+        filter_heels: "Talons",
+        filter_fitness: "Fitness",
+
+        section_payment: "Paiement sécurisé PayPal",
+        payment_text: "Divine Luxe Store accepte les paiements via PayPal pour protéger vos achats. Vous pouvez payer avec votre solde PayPal ou votre carte bancaire, sans partager directement vos informations de carte avec la boutique.",
+        payment_feature_1: "Protection des achats & remboursement en cas de problème",
+        payment_feature_2: "Validation rapide et suivi en temps réel",
+        payment_feature_3: "Adapté aux clients du monde entier",
+        payment_cta: "Payer avec PayPal (démo)",
+
+        section_language_title: "Boutique multilingue",
+        section_language_text: "Le site peut être affiché en français ou en anglais, et peut évoluer pour accueillir d'autres langues afin que les clients du monde entier puissent profiter de Divine Luxe Store dans leur langue.",
+        section_language_hint_1: "Cliquez sur FR / EN en haut pour changer la langue de l'interface.",
+        section_language_hint_2: "Les descriptions produits peuvent aussi être traduites.",
+
+        section_about: "À propos de Charlène",
+        section_about_badge: "Basée en Australie",
+        about_text_1: "Charlène est une femme passionnée de mode, de luxe et de bien-être. Installée en Australie, elle a créé Divine Luxe Store pour partager son sens du détail, des belles matières et des pièces qui donnent confiance.",
+        about_text_2: "Elle sélectionne elle-même chaque sac, chaque paire de talons et chaque tenue fitness avec un objectif : permettre à chaque cliente de se sentir élégante, forte et unique, que ce soit pour une soirée chic ou une séance de sport.",
+        about_text_3: "Divine Luxe Store est aussi un projet de cœur entre vous et elle : un cadeau d'anniversaire digital et une boutique moderne qui peut évoluer avec vos envies et vos rêves.",
+        about_tag_1: "Sacs de luxe",
+        about_tag_2: "Talons élégants",
+        about_tag_3: "Tenues fitness",
+        about_owner_label: "Fondatrice & Propriétaire",
+        about_quote_1: "“La vraie élégance, c'est se sentir bien dans ce que l'on porte, en toute occasion.”",
+        about_quote_2: "“Chaque produit de Divine Luxe Store est choisi comme si c'était un cadeau pour une personne chère.”",
+        about_point_1: "Sélection soignée & service chaleureux",
+        about_point_2: "Boutique gérée à deux : vous & elle",
+
+        section_reviews: "Avis clients",
+        section_reviews_badge: "Commentaires positifs",
+        review_1: "“Les sacs de Divine Luxe Store sont magnifiques. La qualité est incroyable et Charlène répond toujours avec beaucoup de gentillesse. Je me sens vraiment spéciale avec chaque pièce.”",
+        review_2: "“Les talons sont sublimes et très confortables. J'ai reçu beaucoup de compliments en soirée. Le service client est attentionné, on sent que la boutique est gérée avec le cœur.”",
+        review_3: "“Les tenues fitness sont parfaites : belles, confortables et de très bonne qualité. J'adore m'entraîner avec, on se sent motivée et élégante en même temps.”",
+
+        section_contact: "Contact & Support",
+        contact_text: "Pour toute question sur une commande, un produit ou une collaboration, vous pouvez contacter directement Charlène ou vous connecter à votre compte client.",
+        contact_email_label: "E-mail de la boutique",
+        contact_whatsapp_label: "WhatsApp boutique",
+        contact_form_name: "Nom complet",
+        contact_form_email: "E-mail",
+        contact_form_message: "Message",
+        contact_form_btn: "Envoyer (démo)",
+        contact_support_title: "Support personnalisé",
+        contact_support_text: "Charlène prend le temps de répondre à chaque message avec bienveillance. Que vous ayez besoin d'un conseil taille, d'une idée de look ou d'un suivi de colis, vous serez accompagnée.",
+        contact_support_point_1: "Réponse rapide sur WhatsApp",
+        contact_support_point_2: "Suivi client humain & chaleureux",
+
+        admin_modal_title: "Panneau admin (démo)",
+        admin_modal_subtitle: "Vous et Charlène pouvez modifier les prix et ajouter des images. Cette interface est une démonstration.",
+        admin_modal_select_product: "Sélectionner un produit",
+        admin_modal_price: "Nouveau prix (AU$)",
+        admin_modal_image: "Nouvelle image (URL)",
+        admin_modal_apply: "Appliquer les changements (démo)",
+        admin_modal_note: "Dans une version finale, cette section serait protégée par un vrai système d'authentification (par exemple via e-mail et mot de passe pour vous et Charlène).",
+
+        toast_login: "Connexion simulée : interface client débloquée pour la démo.",
+      },
+      en: {
+        nav_tagline: "Fashion, luxury & fitness for everyday elegance.",
+        nav_collections: "Collections",
+        nav_about: "About",
+        nav_reviews: "Reviews",
+        nav_contact: "Contact",
+        nav_login: "Login",
+        hero_pill: "Birthday gift for Charlène · Special edition",
+        hero_title_1: "Divine Luxe Store",
+        hero_title_2: "elegance, luxury & fitness energy",
+        hero_subtitle: "A boutique created for Charlène in Australia, bringing together luxury bags, refined heels and modern fitness outfits to elevate every moment of the day.",
+        hero_cta_primary: "Explore collections",
+        hero_cta_secondary: "About Charlène",
+        stat_clients: "happy clients",
+        stat_products: "styles online",
+        stat_paypal: "secured payments",
+        stat_worldwide: "worldwide clients",
+        hero_card_owner_label: "Founder",
+        hero_card_note_label: "Customer rating",
+
+        section_auth_admin: "Client & admin area",
+        section_auth_badge: "Secure demo · Admin: you & Charlène",
+        client_space_title: "Client area",
+        client_space_subtitle: "Create an account to track your orders and favorites.",
+        client_space_status: "Open",
+        login_email_label: "Email",
+        login_password_label: "Password",
+        login_remember: "Remember me",
+        login_btn: "Login",
+        login_hint: "Demo only: login is simulated just to show the interface (no real data is stored).",
+        admin_title: "Admin access",
+        admin_description: "You and Charlène are administrators: you can change prices, add new photos and create products from a private dashboard.",
+        admin_feature_1: "Update prices in real time",
+        admin_feature_2: "Add / remove products",
+        admin_feature_3: "Manage languages and descriptions",
+        admin_cta: "Open admin panel (demo)",
+
+        section_collections: "Divine Luxe Store collections",
+        section_collections_subtitle: "Luxury bags, elegant heels and fitness outfits carefully curated by Charlène to accompany you from morning to night.",
+        filter_all: "All",
+        filter_bags: "Luxury bags",
+        filter_heels: "Heels",
+        filter_fitness: "Fitness",
+
+        section_payment: "Secure PayPal payment",
+        payment_text: "Divine Luxe Store accepts payments via PayPal to protect your purchases. You can pay with your PayPal balance or credit card without sharing your card details directly with the store.",
+        payment_feature_1: "Purchase protection & refund in case of issue",
+        payment_feature_2: "Fast validation and real-time tracking",
+        payment_feature_3: "Perfect for worldwide customers",
+        payment_cta: "Pay with PayPal (demo)",
+
+        section_language_title: "Multilingual boutique",
+        section_language_text: "The site can be displayed in French or English, and can grow to support more languages so clients around the world can enjoy Divine Luxe Store in their own language.",
+        section_language_hint_1: "Click FR / EN at the top to change the interface language.",
+        section_language_hint_2: "Product descriptions can also be translated.",
+
+        section_about: "About Charlène",
+        section_about_badge: "Based in Australia",
+        about_text_1: "Charlène is passionate about fashion, luxury and wellness. Living in Australia, she created Divine Luxe Store to share her love for details, beautiful materials and pieces that boost confidence.",
+        about_text_2: "She personally selects each bag, each pair of heels and every fitness outfit with one goal: making every client feel elegant, strong and unique, whether for an evening out or a workout.",
+        about_text_3: "Divine Luxe Store is also a heartfelt project between you and her: a digital birthday gift and a modern boutique that can grow with your dreams and ideas.",
+        about_tag_1: "Luxury bags",
+        about_tag_2: "Elegant heels",
+        about_tag_3: "Fitness outfits",
+        about_owner_label: "Founder & Owner",
+        about_quote_1: "“True elegance is feeling good in what you wear, in every situation.”",
+        about_quote_2: "“Every Divine Luxe Store piece is chosen as if it were a gift for someone dear.”",
+        about_point_1: "Careful selection & warm service",
+        about_point_2: "Boutique managed by both of you",
+
+        section_reviews: "Customer reviews",
+        section_reviews_badge: "Positive comments",
+        review_1: "“The bags from Divine Luxe Store are gorgeous. The quality is incredible and Charlène is always so kind. I truly feel special with every piece.”",
+        review_2: "“The heels are stunning and very comfortable. I received so many compliments at my events. You can tell this boutique is run with heart.”",
+        review_3: "“The fitness outfits are perfect: beautiful, comfortable and very high quality. I love working out in them, you feel motivated and elegant at the same time.”",
+
+        section_contact: "Contact & support",
+        contact_text: "For any question about an order, a product or a collaboration, you can contact Charlène directly or log into your client account.",
+        contact_email_label: "Store email",
+        contact_whatsapp_label: "WhatsApp store",
+        contact_form_name: "Full name",
+        contact_form_email: "Email",
+        contact_form_message: "Message",
+        contact_form_btn: "Send (demo)",
+        contact_support_title: "Personalized support",
+        contact_support_text: "Charlène takes time to answer each message kindly. Whether you need size advice, outfit ideas or parcel tracking, you will be guided.",
+        contact_support_point_1: "Fast answers on WhatsApp",
+        contact_support_point_2: "Warm, human customer care",
+
+        admin_modal_title: "Admin panel (demo)",
+        admin_modal_subtitle: "You and Charlène can change prices and add images. This interface is a demonstration.",
+        admin_modal_select_product: "Select a product",
+        admin_modal_price: "New price (AU$)",
+        admin_modal_image: "New image (URL)",
+        admin_modal_apply: "Apply changes (demo)",
+        admin_modal_note: "In a final version, this area would be protected by real authentication (for example email + password for you and Charlène).",
+
+        toast_login: "Simulated login: client interface unlocked for the demo.",
+      }
+    };
+
+    function applyLanguage(lang) {
+      const dict = i18n[lang] || i18n.fr;
+      document.documentElement.lang = lang === "en" ? "en" : "fr";
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      document.getElementById("lang-fr").classList.toggle("lang-pill-active", lang === "fr");
+      document.getElementById("lang-en").classList.toggle("lang-pill-active", lang === "en");
+    }
+
+    document.getElementById("lang-fr").addEventListener("click", () => applyLanguage("fr"));
+    document.getElementById("lang-en").addEventListener("click", () => applyLanguage("en"));
+
+    // --- Products data ---
+    const products = [
+      {
+        id: "bag-1",
+        category: "bags",
+        name: "Sac de luxe 'Aurora Gold'",
+        name_en: "Luxury bag 'Aurora Gold'",
+        price: 249.00,
+        currency: "AU$",
+        img: "https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        desc: "Cuir lisse, dorures fines et silhouette intemporelle pour briller en toute élégance.",
+        desc_en: "Smooth leather, delicate gold details and a timeless silhouette to shine with elegance."
+      },
+      {
+        id: "bag-2",
+        category: "bags",
+        name: "Mini sac 'Midnight Paris'",
+        name_en: "Mini bag 'Midnight Paris'",
+        price: 189.00,
+        currency: "AU$",
+        img: "https://images.pexels.com/photos/932401/pexels-photo-932401.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        desc: "Format compact, couleur profonde et chaîne raffinée pour vos soirées.",
+        desc_en: "Compact size, deep color and refined chain for your evenings out."
+      },
+      {
+        id: "heels-1",
+        category: "heels",
+        name: "Escarpins 'Divine Night'",
+        name_en: "Heels 'Divine Night'",
+        price: 159.00,
+        currency: "AU$",
+        img: "https://images.pexels.com/photos/5704845/pexels-photo-5704845.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        desc: "Talons fins, courbes élégantes et confort étudié pour danser jusqu'au bout de la nuit.",
+        desc_en: "Thin heels, elegant curves and comfort designed for dancing all night."
+      },
+      {
+        id: "heels-2",
+        category: "heels",
+        name: "Sandales 'Golden Sunset'",
+        name_en: "Sandals 'Golden Sunset'",
+        price: 139.00,
+        currency: "AU$",
+        img: "https://images.pexels.com/photos/5705477/pexels-photo-5705477.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        desc: "Brillance dorée et brides délicates pour vos occasions spéciales.",
+        desc_en: "Golden shine and delicate straps for your special occasions."
+      },
+      {
+        id: "fitness-1",
+        category: "fitness",
+        name: "Ensemble fitness 'Power Move'",
+        name_en: "Fitness set 'Power Move'",
+        price: 119.00,
+        currency: "AU$",
+        img: "https://images.pexels.com/photos/7676400/pexels-photo-7676400.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        desc: "Legging gainant et brassière maintien pour des séances intenses en toute confiance.",
+        desc_en: "Shaping leggings and supportive top for intense workouts with confidence."
+      },
+      {
+        id: "fitness-2",
+        category: "fitness",
+        name: "Ensemble 'Soft Energy'",
+        name_en: "Set 'Soft Energy'",
+        price: 109.00,
+        currency: "AU$",
+        img: "https://images.pexels.com/photos/7676404/pexels-photo-7676404.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        desc: "Matière douce, extensible et respirante pour le yoga, le pilates et le quotidien.",
+        desc_en: "Soft, stretchy and breathable fabric for yoga, pilates and everyday wear."
+      }
+    ];
+
+    const productGrid = document.getElementById("product-grid");
+    const cartCountEl = document.getElementById("cart-count");
+    let cartCount = 0;
+
+    function createProductCard(product) {
+      const lang = document.documentElement.lang === "en" ? "en" : "fr";
+      const name = lang === "en" ? product.name_en : product.name;
+      const desc = lang === "en" ? product.desc_en : product.desc;
+
+      const card = document.createElement("article");
+      card.className = "product-card flex flex-col";
+      card.dataset.id = product.id;
+      card.dataset.category = product.category;
+
+      card.innerHTML = `
+        <div class="product-img-wrapper">
+          <img src="${product.img}" alt="${name}" class="product-img">
+          <a href="https://wa.me/61413977015?text=${encodeURIComponent("Bonjour Charlène, je suis intéressé(e) par : " + name)}" target="_blank" class="whatsapp-fab" title="WhatsApp">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.486 2 2 6.019 2 11.062c0 1.941.57 3.752 1.652 5.361L2 22l5.77-1.588C9.315 21.2 10.645 21.5 12 21.5c5.514 0 10-4.019 10-9.062C22 6.019 17.514 2 12 2Zm0 17c-1.178 0-2.337-.278-3.367-.804l-.24-.12-3.423.942.939-3.26-.156-.25C5.25 14.233 5 13.164 5 12.062 5 7.944 8.589 5 12 5s7 2.944 7 7.062C19 16.056 15.411 19 12 19Zm3.547-5.461c-.194-.097-1.151-.567-1.329-.631-.178-.065-.308-.097-.438.097-.13.194-.503.631-.617.757-.114.129-.227.145-.421.048-.194-.097-.82-.301-1.562-.96-.578-.506-.969-1.132-1.083-1.327-.114-.194-.012-.299.085-.395.087-.087.194-.227.291-.34.097-.114.13-.194.194-.324.065-.129.033-.242-.016-.34-.049-.097-.438-1.058-.6-1.45-.158-.379-.319-.327-.438-.333l-.374-.007c-.129 0-.34.048-.517.242-.178.194-.679.663-.679 1.618 0 .955.695 1.877.792 2.006.097.129 1.363 2.083 3.301 2.919.462.199.823.318 1.103.407.463.147.885.126 1.219.076.372-.055 1.151-.47 1.314-.924.162-.454.162-.843.113-.924-.049-.081-.178-.129-.372-.227Z"></path>
+            </svg>
+          </a>
+        </div>
+        <div class="flex flex-1 flex-col justify-between p-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+              ${product.category === "bags" ? (lang === "en" ? "Luxury bag" : "Sac de luxe") :
+                product.category === "heels" ? (lang === "en" ? "Heels" : "Talons") :
+                (lang === "en" ? "Fitness set" : "Tenue fitness")}
+            </p>
+            <h3 class="mt-1 text-sm font-semibold text-slate-50">${name}</h3>
+            <p class="mt-1 text-xs text-slate-300">${desc}</p>
+          </div>
+          <div class="mt-3 flex items-end justify-between">
+            <div>
+              <p class="text-sm font-semibold text-orange-300">${product.currency} ${product.price.toFixed(2)}</p>
+              <p class="text-[0.7rem] text-slate-500">${lang === "en" ? "Inclusive of standard taxes" : "TTC standard"}</p>
+            </div>
+            <button class="rounded-full bg-orange-500/15 px-3 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-orange-200 hover:bg-orange-500/25">
+              ${lang === "en" ? "Add to cart" : "Ajouter au panier"}
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Add to cart listener
+      card.querySelector("button").addEventListener("click", () => {
+        cartCount += 1;
+        cartCountEl.textContent = cartCount;
+      });
+
+      return card;
+    }
+
+    function renderProducts() {
+      productGrid.innerHTML = "";
+      products.forEach(p => {
+        productGrid.appendChild(createProductCard(p));
+      });
+      populateAdminSelect();
+    }
+
+    function updateProductCardsLanguage() {
+      const cards = productGrid.querySelectorAll(".product-card");
+      const lang = document.documentElement.lang === "en" ? "en" : "fr";
+      cards.forEach(card => {
+        const id = card.dataset.id;
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+        const name = lang === "en" ? product.name_en : product.name;
+        const desc = lang === "en" ? product.desc_en : product.desc;
+        card.querySelector("h3").textContent = name;
+        card.querySelector("p.text-xs.text-slate-300").textContent = desc;
+        const categoryEl = card.querySelector("p.text-xs.font-semibold");
+        if (product.category === "bags") categoryEl.textContent = lang === "en" ? "Luxury bag" : "Sac de luxe";
+        else if (product.category === "heels") categoryEl.textContent = lang === "en" ? "Heels" : "Talons";
+        else categoryEl.textContent = lang === "en" ? "Fitness set" : "Tenue fitness";
+        card.querySelector("button").textContent = lang === "en" ? "Add to cart" : "Ajouter au panier";
+      });
+    }
+
+    // Re-apply language to DOM including products
+    const originalApplyLanguage = applyLanguage;
+    applyLanguage = function(lang) {
+      originalApplyLanguage(lang);
+      updateProductCardsLanguage();
+    };
+
+    // --- Admin modal logic ---
+    const adminModal = document.getElementById("admin-modal");
+    document.getElementById("btn-open-admin").addEventListener("click", () => {
+      adminModal.classList.remove("hidden");
+    });
+    document.getElementById("btn-close-admin").addEventListener("click", () => {
+      adminModal.classList.add("hidden");
+    });
+
+    const adminProductSelect = document.getElementById("admin-product-select");
+    function populateAdminSelect() {
+      adminProductSelect.innerHTML = "";
+      const lang = document.documentElement.lang === "en" ? "en" : "fr";
+      products.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = `${lang === "en" ? p.name_en : p.name} (${p.currency} ${p.price.toFixed(2)})`;
+        adminProductSelect.appendChild(opt);
+      });
+    }
+
+    document.getElementById("admin-apply").addEventListener("click", () => {
+      const id = adminProductSelect.value;
+      const newPrice = parseFloat(document.getElementById("admin-new-price").value);
+      const newImage = document.getElementById("admin-new-image").value.trim();
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+
+      if (!isNaN(newPrice) && newPrice > 0) {
+        product.price = newPrice;
+      }
+      if (newImage) {
+        product.img = newImage;
+      }
+      renderProducts();
+      document.getElementById("admin-new-price").value = "";
+      document.getElementById("admin-new-image").value = "";
+    });
+
+    // --- Mock login toast ---
+    const toastLogin = document.getElementById("toast-login");
+    function showToast() {
+      toastLogin.classList.remove("opacity-0");
+      setTimeout(() => {
+        toastLogin.classList.add("opacity-0");
+      }, 2500);
+    }
+    document.getElementById("mock-login").addEventListener("click", showToast);
+    document.getElementById("btn-login").addEventListener("click", showToast);
+
+    // Initial render
+    renderProducts();
+    applyLanguage("fr");
+  </script>
+</body>
+</html>
